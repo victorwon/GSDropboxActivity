@@ -4,6 +4,8 @@ An iOS 6 UIActivity subclass for uploading to Dropbox.
 
 This is currently work in progress. All suggestions gratefully received!
 
+<img src="http://goosoftware.github.com/GSDropboxActivity/GSDropboxActivity-example-screenshot.png" width="320">
+
 # Usage instructions
 
 ## 1. Install the Dropbox iOS SDK
