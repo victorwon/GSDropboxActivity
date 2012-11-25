@@ -55,7 +55,7 @@ Just copy all the .h, .m and .png files into your Xcode project.
 ```
 ## 4. Listen out for notifications
 
-The following notifications are supported:
+The following notifications are declared in `GSDropboxUploader.h`:
 
 ### GSDropboxUploaderDidStartUploadingFileNotification
 
