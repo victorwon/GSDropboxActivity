@@ -19,18 +19,15 @@ Download the latest [Dropbox iOS SDK][dropbox-ios-sdk] and follow Dropbox's inst
 
 ...
 
-DBSession* dbSession =
-    [[[DBSession alloc]
-      initWithAppKey:@"APP_KEY"
-      appSecret:@"APP_SECRET"
-      root:ACCESS_TYPE] // either kDBRootAppFolder or kDBRootDropbox
-     autorelease];
+DBSession* dbSession = [[DBSession alloc] initWithAppKey:@"APP_KEY"
+                                               appSecret:@"APP_SECRET"
+                                                    root:ACCESS_TYPE]; // either kDBRootAppFolder or kDBRootDropbox
 [DBSession setSharedSession:dbSession];
 ```
 
 ## 2. Add GSDropboxActivity to your project
 
-Just copy all the .h, .m and .png files into your Xcode project.
+Just copy the GSDropboxActivity folder into your project.
 
 ## 3. Add a GSDropboxActivity object to your list of custom activities
 
