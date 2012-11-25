@@ -7,8 +7,15 @@
 //
 
 #import "GSViewController.h"
+#import "GSDropboxActivity.h"
+#import "GSDropboxUploader.h"
 
 @interface GSViewController ()
+
+- (void)handleDropboxFileProgressNotification:(NSNotification*)notification;
+- (void)handleDropboxUploadDidStartNotification:(NSNotification*)notification;
+- (void)handleDropboxUploadDidFinishNotification:(NSNotification*)notification;
+- (void)handleDropboxUploadDidFailNotification:(NSNotification*)notification;
 
 @end
 
@@ -17,13 +24,98 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+    
+    self.progressView.hidden = YES;
 }
 
-- (void)didReceiveMemoryWarning
+- (void)viewDidAppear:(BOOL)animated
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    [super viewDidAppear:animated];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleDropboxFileProgressNotification:)
+                                                 name:GSDropboxUploaderDidGetProgressUpdateNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleDropboxUploadDidStartNotification:)
+                                                 name:GSDropboxUploaderDidStartUploadingFileNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleDropboxUploadDidFinishNotification:)
+                                                 name:GSDropboxUploaderDidFinishUploadingFileNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleDropboxUploadDidFailNotification:)
+                                                 name:GSDropboxUploaderDidFailNotification
+                                               object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)shareKitten:(id)sender
+{
+    NSURL *kittenFileURL = [[NSBundle mainBundle] URLForResource:@"kitten.jpg" withExtension:nil];
+    NSArray *objectsToShare = @[
+        kittenFileURL
+    ];
+    NSArray *activities = @[
+        [[GSDropboxActivity alloc] init]
+    ];
+    
+    UIActivityViewController *vc = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare
+                                                                     applicationActivities:activities];
+    
+    // Exclude some default activity types to keep this demo clean and simple.
+    vc.excludedActivityTypes = @[
+        UIActivityTypeAssignToContact,
+        UIActivityTypeCopyToPasteboard,
+        UIActivityTypePostToFacebook,
+        UIActivityTypePostToTwitter,
+        UIActivityTypePostToWeibo,
+        UIActivityTypePrint,
+    ];
+    
+    [self presentViewController:vc animated:YES completion:NULL];
+}
+
+- (void)handleDropboxFileProgressNotification:(NSNotification *)notification
+{
+    NSURL *fileURL = notification.userInfo[GSDropboxUploaderFileURLKey];
+    float progress = [notification.userInfo[GSDropboxUploaderProgressKey] floatValue];
+    NSLog(@"Upload of %@ now at %.0f%%", fileURL.absoluteString, progress * 100);
+    
+    self.progressView.progress = progress;
+}
+
+- (void)handleDropboxUploadDidStartNotification:(NSNotification *)notification
+{
+    NSURL *fileURL = notification.userInfo[GSDropboxUploaderFileURLKey];
+    NSLog(@"Started uploading %@", fileURL.absoluteString);
+
+    self.progressView.progress = 0.0;
+    self.progressView.hidden = NO;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+}
+
+- (void)handleDropboxUploadDidFinishNotification:(NSNotification *)notification
+{
+    NSURL *fileURL = notification.userInfo[GSDropboxUploaderFileURLKey];
+    NSLog(@"Finished uploading %@", fileURL.absoluteString);
+    
+    self.progressView.hidden = YES;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+}
+
+- (void)handleDropboxUploadDidFailNotification:(NSNotification *)notification
+{
+    NSURL *fileURL = notification.userInfo[GSDropboxUploaderFileURLKey];
+    NSLog(@"Failed to upload %@", fileURL.absoluteString);
+
+    self.progressView.hidden = YES;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
 
 @end

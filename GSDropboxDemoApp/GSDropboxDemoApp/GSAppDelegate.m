@@ -7,19 +7,43 @@
 //
 
 #import "GSAppDelegate.h"
-
 #import "GSViewController.h"
+#import <DropboxSDK/DropboxSDK.h>
 
 @implementation GSAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+#warning Potentially incomplete method implementation. Fill in your Dropbox credentials!
+#warning NB: you must also update the URL scheme listed under the CFBundleURLTypes key in GSDropboxDemoApp-Info.plist
+    NSString *dropboxAppKey = @"DROPBOX API KEY";
+    NSString *dropboxAppSecret = @"DROPBOX APP SECRET";
+    NSString *dropboxRoot = @"CHANGE ME";  // either kDBRootAppFolder or kDBRootDropbox
+
+    DBSession* dbSession = [[DBSession alloc] initWithAppKey:dropboxAppKey
+                                                   appSecret:dropboxAppSecret
+                                                        root:dropboxRoot];
+    [DBSession setSharedSession:dbSession];
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.viewController = [[GSViewController alloc] initWithNibName:@"GSViewController" bundle:nil];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     return YES;
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    if ([[DBSession sharedSession] handleOpenURL:url]) {
+        if ([[DBSession sharedSession] isLinked]) {
+            NSLog(@"App linked to Dropbox successfully");
+        } else {
+            NSLog(@"App not linked to Dropbox!");
+        }
+        return YES;
+    }
+    return NO;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

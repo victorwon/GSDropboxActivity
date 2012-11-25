@@ -10,4 +10,7 @@
 
 @interface GSViewController : UIViewController
 
+@property (nonatomic, weak) IBOutlet UIProgressView *progressView;
+- (IBAction)shareKitten:(id)sender;
+
 @end
