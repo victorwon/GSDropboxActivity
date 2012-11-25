@@ -53,6 +53,42 @@ Just copy all the .h, .m and .png files into your Xcode project.
     [self presentViewController:vc animated:YES completion:NULL];
 }
 ```
+## 4. Listen out for notifications
+
+The following notifications are supported:
+
+### GSDropboxUploaderDidStartUploadingFileNotification
+
+Fired when a file starts uploading. 
+
+**userInfo dictionary entries:**
+
+* `GSDropboxUploaderFileURLKey`: the URL of the file being uploaded
+
+### GSDropboxUploaderDidFinishUploadingFileNotification
+
+Fired when a file finishes uploading. 
+
+**userInfo dictionary entries:**
+
+* `GSDropboxUploaderFileURLKey`: the URL of the file being uploaded
+
+### GSDropboxUploaderDidGetProgressUpdateNotification
+
+Fired when a file finishes uploading. 
+
+**userInfo dictionary entries:**
+
+* `GSDropboxUploaderFileURLKey`: the URL of the file being uploaded
+* `GSDropboxUploaderProgressKey`: the current upload progress; an `NSNumber` whose `floatValue` is between 0.0 and 1.0
+
+### GSDropboxUploaderDidFailNotification
+
+Fired when a file fails to upload.
+
+**userInfo dictionary entries:**
+
+* `GSDropboxUploaderFileURLKey`: the URL of the file being uploaded
 
 
 # License
