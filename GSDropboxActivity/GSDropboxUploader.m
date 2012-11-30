@@ -82,6 +82,14 @@ NSString *const GSDropboxUploaderProgressKey = @"GSDropboxUploaderProgressKey";
     return [self._uploadQueue count];
 }
 
+- (void)cancelAll
+{
+    NSLog(@"Cancelling Dropbox uploads");
+    [self._uploadQueue removeAllObjects];
+    [self._dropboxClient cancelAllRequests];
+    self._inFlightUploadJob = nil;
+}
+
 - (DBRestClient *)_dropboxClient
 {
     if (__dropboxClient == nil && [DBSession sharedSession] != nil) {

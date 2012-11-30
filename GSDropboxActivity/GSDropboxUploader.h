@@ -27,4 +27,7 @@ extern NSString *const GSDropboxUploaderProgressKey;
 /* Uploads are processed one at a time. If you call uploadFileWithURL:toPath: while an upload's already in progress the new upload will be queued. pendingUploadCount returns the number of uploads currently in the queue pending processing. */
 - (NSUInteger)pendingUploadCount;
 
+/* Cancel all uploads, whether in flight or queued. */
+- (void)cancelAll;
+
 @end
