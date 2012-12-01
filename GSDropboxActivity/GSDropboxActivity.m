@@ -28,7 +28,7 @@
 }
 
 - (NSString *)activityTitle {
-    return NSLocalizedString(@"Dropbox", @"Name of the service at www.dropbox.com");
+    return @"Dropbox";
 }
 - (UIImage *)activityImage {
     return [UIImage imageNamed:@"GSDropboxActivityIcon"];
