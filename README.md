@@ -1,8 +1,6 @@
 # GSDropboxActivity
 
-An iOS 6 UIActivity subclass for uploading to Dropbox.
-
-This is currently work in progress. All suggestions gratefully received!
+ GSDropboxActivity is an iOS 6 UIActivity subclass for uploading to Dropbox.
 
 <img src="http://goosoftware.github.com/GSDropboxActivity/GSDropboxActivity-example-screenshot.png" width="320">
 
@@ -72,7 +70,7 @@ Fired when a file finishes uploading.
 
 ### GSDropboxUploaderDidGetProgressUpdateNotification
 
-Fired when a file finishes uploading. 
+Fired periodically while a file is uploading. 
 
 **userInfo dictionary entries:**
 
