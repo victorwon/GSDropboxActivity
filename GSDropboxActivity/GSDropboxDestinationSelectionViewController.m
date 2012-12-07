@@ -57,7 +57,7 @@
         self.rootPath = @"/";
     
     if ([self.rootPath isEqualToString:@"/"]) {
-        self.title = NSLocalizedString(@"Dropbox", @"The name of the service at www.dropbox.com");
+        self.title = @"Dropbox";
     } else {
         self.title = [self.rootPath lastPathComponent];
     }
