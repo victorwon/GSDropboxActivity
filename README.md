@@ -29,7 +29,9 @@ DBSession* dbSession = [[DBSession alloc] initWithAppKey:@"APP_KEY"
 
 Just copy the GSDropboxActivity folder into your project.
 
-## 3. Add a GSDropboxActivity object to your list of custom activities
+## 3. Add a GSDropboxActivity object to your list of custom activities and share some NSURL objects
+
+GSDropboxActivity can share NSURL objects where each object is the URL of a file on the local disk.
 
 ```objective-c
 - (void)handleShareButton:(id)sender
