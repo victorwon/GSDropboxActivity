@@ -44,7 +44,14 @@
 };
 
 - (void)prepareWithActivityItems:(NSArray *)activityItems {
-    self.activityItems = activityItems;
+    // Filter out any items that aren't NSURL objects
+    NSMutableArray *urlItems = [NSMutableArray arrayWithCapacity:[activityItems count]];
+    for (id object in activityItems) {
+        if ([object isKindOfClass:[NSURL class]]) {
+            [urlItems addObject:object];
+        }
+    }
+    self.activityItems = [NSArray arrayWithArray:urlItems];
 }
 
 - (UIViewController *)activityViewController {
