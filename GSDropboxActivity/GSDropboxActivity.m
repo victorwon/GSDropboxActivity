@@ -36,7 +36,7 @@
 
 - (BOOL)canPerformWithActivityItems:(NSArray *)activityItems {
     for (id obj in activityItems) {
-        if ([obj isKindOfClass:[NSURL class]] || [obj isKindOfClass:[UIImage class]]) {
+        if ([obj isKindOfClass:[NSURL class]]) {
             return YES;
         }
     }
