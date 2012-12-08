@@ -20,7 +20,6 @@
 		F40DF04F166255800050E22C /* GSViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F40DF04D166255800050E22C /* GSViewController.xib */; };
 		F40DF056166255D80050E22C /* kitten-thumbnail.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F40DF055166255D80050E22C /* kitten-thumbnail.jpg */; };
 		F40DF065166256780050E22C /* GSDropboxActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = F40DF059166256780050E22C /* GSDropboxActivity.m */; };
-		F40DF066166256780050E22C /* GSDropboxActivityIcon.opacity in Resources */ = {isa = PBXBuildFile; fileRef = F40DF05A166256780050E22C /* GSDropboxActivityIcon.opacity */; };
 		F40DF067166256780050E22C /* GSDropboxActivityIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = F40DF05B166256780050E22C /* GSDropboxActivityIcon.png */; };
 		F40DF068166256780050E22C /* GSDropboxActivityIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F40DF05C166256780050E22C /* GSDropboxActivityIcon@2x.png */; };
 		F40DF069166256780050E22C /* GSDropboxActivityIcon@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = F40DF05D166256780050E22C /* GSDropboxActivityIcon@2x~ipad.png */; };
@@ -54,7 +53,6 @@
 		F40DF055166255D80050E22C /* kitten-thumbnail.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "kitten-thumbnail.jpg"; sourceTree = "<group>"; };
 		F40DF058166256780050E22C /* GSDropboxActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GSDropboxActivity.h; sourceTree = "<group>"; };
 		F40DF059166256780050E22C /* GSDropboxActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GSDropboxActivity.m; sourceTree = "<group>"; };
-		F40DF05A166256780050E22C /* GSDropboxActivityIcon.opacity */ = {isa = PBXFileReference; lastKnownFileType = file; path = GSDropboxActivityIcon.opacity; sourceTree = "<group>"; };
 		F40DF05B166256780050E22C /* GSDropboxActivityIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GSDropboxActivityIcon.png; sourceTree = "<group>"; };
 		F40DF05C166256780050E22C /* GSDropboxActivityIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GSDropboxActivityIcon@2x.png"; sourceTree = "<group>"; };
 		F40DF05D166256780050E22C /* GSDropboxActivityIcon@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GSDropboxActivityIcon@2x~ipad.png"; sourceTree = "<group>"; };
@@ -153,7 +151,6 @@
 			children = (
 				F40DF058166256780050E22C /* GSDropboxActivity.h */,
 				F40DF059166256780050E22C /* GSDropboxActivity.m */,
-				F40DF05A166256780050E22C /* GSDropboxActivityIcon.opacity */,
 				F40DF05B166256780050E22C /* GSDropboxActivityIcon.png */,
 				F40DF05C166256780050E22C /* GSDropboxActivityIcon@2x.png */,
 				F40DF05D166256780050E22C /* GSDropboxActivityIcon@2x~ipad.png */,
@@ -227,7 +224,6 @@
 				F40DF049166255800050E22C /* Default-568h@2x.png in Resources */,
 				F40DF04F166255800050E22C /* GSViewController.xib in Resources */,
 				F40DF056166255D80050E22C /* kitten-thumbnail.jpg in Resources */,
-				F40DF066166256780050E22C /* GSDropboxActivityIcon.opacity in Resources */,
 				F40DF067166256780050E22C /* GSDropboxActivityIcon.png in Resources */,
 				F40DF068166256780050E22C /* GSDropboxActivityIcon@2x.png in Resources */,
 				F40DF069166256780050E22C /* GSDropboxActivityIcon@2x~ipad.png in Resources */,
@@ -374,6 +370,7 @@
 				F40DF054166255800050E22C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
