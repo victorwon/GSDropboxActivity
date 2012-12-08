@@ -8,11 +8,15 @@
 #import "GSDropboxDestinationSelectionViewController.h"
 #import <DropboxSDK/DropboxSDK.h>
 
+#define kDropboxConnectionMaxRetries 2
+
 @interface GSDropboxDestinationSelectionViewController () <DBRestClientDelegate>
 @property (nonatomic) BOOL isLoading;
 @property (nonatomic, strong) NSArray *subdirectories;
 @property (nonatomic, strong) DBRestClient *dropboxClient;
+@property (nonatomic) NSUInteger dropboxConnectionRetryCount;
 
+- (void)handleApplicationBecameActive:(NSNotification *)notification;
 - (void)handleCancel;
 - (void)handleSelectDestination;
 
@@ -25,8 +29,14 @@
     self = [super initWithStyle:style];
     if (self) {
         _isLoading = YES;
+        self.dropboxConnectionRetryCount = 0;
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewDidLoad
@@ -47,6 +57,18 @@
     [self.navigationController setToolbarHidden:NO];
     self.navigationController.navigationBar.tintColor = [UIColor darkGrayColor];
     self.navigationController.toolbar.tintColor = [UIColor darkGrayColor];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleApplicationBecameActive:)
+                                                 name:UIApplicationDidBecomeActiveNotification
+                                               object:nil];
+}
+
+- (void)viewDidUnload
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+
+    [super viewDidUnload];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -168,7 +190,14 @@
 
 - (void)restClient:(DBRestClient *)client loadMetadataFailedWithError:(NSError *)error
 {
-    self.isLoading = NO;
+    // Error 401 gets returned if a token is invalid, e.g. if the user has deleted
+    // the app from their list of authorized apps at dropbox.com
+    if (error.code == 401 && self.dropboxConnectionRetryCount < kDropboxConnectionMaxRetries) {
+        self.dropboxConnectionRetryCount++;
+        [[DBSession sharedSession] linkFromController:self];
+    } else {
+        self.isLoading = NO;
+    }
 }
 
 - (void)setIsLoading:(BOOL)isLoading
@@ -192,6 +221,15 @@
         [self.delegate dropboxDestinationSelectionViewController:self
                                         didSelectDestinationPath:self.rootPath];
     }
+}
+
+- (void)handleApplicationBecameActive:(NSNotification *)notification
+{
+    // Happens after user has been bounced out to Dropbox.app or Safari.app
+    // to authenticate
+    [self.dropboxClient loadMetadata:self.rootPath];
+    self.isLoading = YES;
+    
 }
 
 @end
