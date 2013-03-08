@@ -12,10 +12,7 @@
 
 @interface GSViewController ()
 
-- (void)handleDropboxFileProgressNotification:(NSNotification*)notification;
-- (void)handleDropboxUploadDidStartNotification:(NSNotification*)notification;
-- (void)handleDropboxUploadDidFinishNotification:(NSNotification*)notification;
-- (void)handleDropboxUploadDidFailNotification:(NSNotification*)notification;
+@property (nonatomic, retain) UIPopoverController *activityPopoverController;
 
 @end
 
@@ -78,7 +75,27 @@
         UIActivityTypePrint,
     ];
     
-    [self presentViewController:vc animated:YES completion:NULL];
+    if (isIpad) {
+        if (self.activityPopoverController.isPopoverVisible) {
+            // If the popover's visible, hide it
+            [self.activityPopoverController dismissPopoverAnimated:YES];
+        } else {
+            if (self.activityPopoverController == nil) {
+                self.activityPopoverController = [[UIPopoverController alloc] initWithContentViewController:vc];
+            } else {
+                self.activityPopoverController.contentViewController = vc;
+            }
+            
+            // Set a completion handler to dismiss the popover
+            [vc setCompletionHandler:^(NSString *activityType, BOOL completed){
+                [self.activityPopoverController dismissPopoverAnimated:YES];
+            }];
+            
+            [[self activityPopoverController] presentPopoverFromRect:[((UIControl*)sender) frame] inView:[self view] permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+        }
+    } else {
+        [self presentViewController:vc animated:YES completion:NULL];
+    }
 }
 
 - (void)handleDropboxFileProgressNotification:(NSNotification *)notification
