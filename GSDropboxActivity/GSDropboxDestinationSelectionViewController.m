@@ -210,16 +210,18 @@
 
 - (void)handleCancel
 {
-    if ([self.delegate respondsToSelector:@selector(dropboxDestinationSelectionViewControllerDidCancel:)]) {
-        [self.delegate dropboxDestinationSelectionViewControllerDidCancel:self];
+    id<GSDropboxDestinationSelectionViewControllerDelegate> delegate = self.delegate;
+    if ([delegate respondsToSelector:@selector(dropboxDestinationSelectionViewControllerDidCancel:)]) {
+        [delegate dropboxDestinationSelectionViewControllerDidCancel:self];
     }
 }
 
 - (void)handleSelectDestination
 {
-    if ([self.delegate respondsToSelector:@selector(dropboxDestinationSelectionViewController:didSelectDestinationPath:)]) {
-        [self.delegate dropboxDestinationSelectionViewController:self
-                                        didSelectDestinationPath:self.rootPath];
+    id<GSDropboxDestinationSelectionViewControllerDelegate> delegate = self.delegate;
+    if ([delegate respondsToSelector:@selector(dropboxDestinationSelectionViewController:didSelectDestinationPath:)]) {
+        [delegate dropboxDestinationSelectionViewController:self
+                                   didSelectDestinationPath:self.rootPath];
     }
 }
 
