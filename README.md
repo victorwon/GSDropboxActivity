@@ -2,7 +2,7 @@
 
  GSDropboxActivity is an iOS 6 UIActivity subclass for uploading to Dropbox.
 
-<img src="http://goosoftware.github.com/GSDropboxActivity/GSDropboxActivity-example-screenshot.png" width="320">
+<img src="http://goosoftware.github.io/GSDropboxActivity/GSDropboxActivity-example-screenshot.png" width="320">
 
 # Usage instructions
 
