@@ -31,6 +31,10 @@
 		F40DF0791662581C0050E22C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F40DF0781662581C0050E22C /* QuartzCore.framework */; };
 		F40DF07B166258220050E22C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F40DF07A166258220050E22C /* Security.framework */; };
 		F40DF08816625D5F0050E22C /* kitten.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F40DF08716625D5F0050E22C /* kitten.jpg */; };
+		F465929E17956AA000A3847E /* GSDropboxActivityIcon-iOS6.png in Resources */ = {isa = PBXBuildFile; fileRef = F465929A17956AA000A3847E /* GSDropboxActivityIcon-iOS6.png */; };
+		F465929F17956AA000A3847E /* GSDropboxActivityIcon-iOS6@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F465929B17956AA000A3847E /* GSDropboxActivityIcon-iOS6@2x.png */; };
+		F46592A017956AA000A3847E /* GSDropboxActivityIcon-iOS6@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = F465929C17956AA000A3847E /* GSDropboxActivityIcon-iOS6@2x~ipad.png */; };
+		F46592A117956AA000A3847E /* GSDropboxActivityIcon-iOS6~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = F465929D17956AA000A3847E /* GSDropboxActivityIcon-iOS6~ipad.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +71,10 @@
 		F40DF0781662581C0050E22C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		F40DF07A166258220050E22C /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		F40DF08716625D5F0050E22C /* kitten.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = kitten.jpg; sourceTree = "<group>"; };
+		F465929A17956AA000A3847E /* GSDropboxActivityIcon-iOS6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GSDropboxActivityIcon-iOS6.png"; sourceTree = "<group>"; };
+		F465929B17956AA000A3847E /* GSDropboxActivityIcon-iOS6@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GSDropboxActivityIcon-iOS6@2x.png"; sourceTree = "<group>"; };
+		F465929C17956AA000A3847E /* GSDropboxActivityIcon-iOS6@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GSDropboxActivityIcon-iOS6@2x~ipad.png"; sourceTree = "<group>"; };
+		F465929D17956AA000A3847E /* GSDropboxActivityIcon-iOS6~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GSDropboxActivityIcon-iOS6~ipad.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,12 +157,9 @@
 		F40DF057166256780050E22C /* GSDropboxActivity */ = {
 			isa = PBXGroup;
 			children = (
+				F46592A217956AAC00A3847E /* Icons */,
 				F40DF058166256780050E22C /* GSDropboxActivity.h */,
 				F40DF059166256780050E22C /* GSDropboxActivity.m */,
-				F40DF05B166256780050E22C /* GSDropboxActivityIcon.png */,
-				F40DF05C166256780050E22C /* GSDropboxActivityIcon@2x.png */,
-				F40DF05D166256780050E22C /* GSDropboxActivityIcon@2x~ipad.png */,
-				F40DF05E166256780050E22C /* GSDropboxActivityIcon~ipad.png */,
 				F40DF05F166256780050E22C /* GSDropboxDestinationSelectionViewController.h */,
 				F40DF060166256780050E22C /* GSDropboxDestinationSelectionViewController.m */,
 				F40DF061166256780050E22C /* GSDropboxUploader.h */,
@@ -164,6 +169,21 @@
 			);
 			name = GSDropboxActivity;
 			path = ../../GSDropboxActivity;
+			sourceTree = "<group>";
+		};
+		F46592A217956AAC00A3847E /* Icons */ = {
+			isa = PBXGroup;
+			children = (
+				F465929A17956AA000A3847E /* GSDropboxActivityIcon-iOS6.png */,
+				F465929B17956AA000A3847E /* GSDropboxActivityIcon-iOS6@2x.png */,
+				F465929C17956AA000A3847E /* GSDropboxActivityIcon-iOS6@2x~ipad.png */,
+				F465929D17956AA000A3847E /* GSDropboxActivityIcon-iOS6~ipad.png */,
+				F40DF05B166256780050E22C /* GSDropboxActivityIcon.png */,
+				F40DF05C166256780050E22C /* GSDropboxActivityIcon@2x.png */,
+				F40DF05D166256780050E22C /* GSDropboxActivityIcon@2x~ipad.png */,
+				F40DF05E166256780050E22C /* GSDropboxActivityIcon~ipad.png */,
+			);
+			name = Icons;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -229,6 +249,10 @@
 				F40DF069166256780050E22C /* GSDropboxActivityIcon@2x~ipad.png in Resources */,
 				F40DF06A166256780050E22C /* GSDropboxActivityIcon~ipad.png in Resources */,
 				F40DF08816625D5F0050E22C /* kitten.jpg in Resources */,
+				F465929E17956AA000A3847E /* GSDropboxActivityIcon-iOS6.png in Resources */,
+				F465929F17956AA000A3847E /* GSDropboxActivityIcon-iOS6@2x.png in Resources */,
+				F46592A017956AA000A3847E /* GSDropboxActivityIcon-iOS6@2x~ipad.png in Resources */,
+				F46592A117956AA000A3847E /* GSDropboxActivityIcon-iOS6~ipad.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

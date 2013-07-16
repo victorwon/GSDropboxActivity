@@ -31,7 +31,11 @@
     return @"Dropbox";
 }
 - (UIImage *)activityImage {
-    return [UIImage imageNamed:@"GSDropboxActivityIcon"];
+    if ([[[[UIDevice currentDevice] systemVersion] substringToIndex:1] integerValue] <= 6) {
+        return [UIImage imageNamed:@"GSDropboxActivityIcon-iOS6"];
+    } else {
+        return [UIImage imageNamed:@"GSDropboxActivityIcon"];
+    }
 }
 
 - (BOOL)canPerformWithActivityItems:(NSArray *)activityItems {
