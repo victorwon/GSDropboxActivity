@@ -75,6 +75,8 @@
 {
     [super viewWillAppear:animated];
     
+    [self updateChooseButton];
+    
     if (self.rootPath == nil)
         self.rootPath = @"/";
     
@@ -87,6 +89,21 @@
     self.isLoading = YES;
     self.navigationItem.rightBarButtonItem.enabled = YES;
 }
+
+- (void) updateChooseButton {
+    NSArray* toolbarButtons = self.toolbarItems;
+    if(toolbarButtons.count < 2) {
+        //Not found
+        return;
+    }
+    UIBarButtonItem *item = toolbarButtons[1];
+    BOOL hasValidData = [self hasValidData];
+    item.enabled = hasValidData;
+}
+
+- (BOOL) hasValidData {
+    BOOL valid = self.subdirectories != nil && self.isLoading == NO;
+    return valid;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -140,9 +157,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (self.isLoading || self.subdirectories == nil || [self.subdirectories count] == 0) {
-        return 1;
-    }
+    if (![self hasValidData] || self.subdirectories.count < 1) return 1;
+
     return [self.subdirectories count];
     
 }
@@ -201,6 +217,7 @@
     }
     self.subdirectories = [array sortedArrayUsingSelector:@selector(compare:)];
     self.isLoading = NO;
+    [self updateChooseButton];
 }
 
 - (void)restClient:(DBRestClient *)client loadMetadataFailedWithError:(NSError *)error
@@ -212,6 +229,7 @@
     } else {
         self.isLoading = NO;
     }
+    [self updateChooseButton];
 }
 
 - (void)setIsLoading:(BOOL)isLoading
