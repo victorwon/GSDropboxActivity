@@ -85,6 +85,8 @@
     }
     self.navigationItem.prompt = NSLocalizedString(@"Choose a destination for uploads.", @"Prompt asking user to select a destination folder on Dropbox to which uploads will be saved.") ;
     self.isLoading = YES;
+    self.navigationItem.rightBarButtonItem.enabled = YES;
+}
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -92,9 +94,22 @@
     [super viewDidAppear:animated];
     
     if (![[DBSession sharedSession] isLinked]) {
-        [[DBSession sharedSession] linkFromController:self];
+        [self showLoginDialogOrCancel];
     } else {
         [self.dropboxClient loadMetadata:self.rootPath];
+    }
+}
+
+- (void) showLoginDialogOrCancel {
+    if(self.dropboxConnectionRetryCount < kDropboxConnectionMaxRetries) {
+        self.dropboxConnectionRetryCount++;
+        //disable cancel button, as if the user pressed it while we're presenting
+        //the loging viewcontroller (async), UIKit crashes with multiple viewcontroller
+        //animations
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+        [[DBSession sharedSession] linkFromController:self];
+    } else {
+        [self.delegate dropboxDestinationSelectionViewControllerDidCancel:self];
     }
 }
 
@@ -192,9 +207,8 @@
 {
     // Error 401 gets returned if a token is invalid, e.g. if the user has deleted
     // the app from their list of authorized apps at dropbox.com
-    if (error.code == 401 && self.dropboxConnectionRetryCount < kDropboxConnectionMaxRetries) {
-        self.dropboxConnectionRetryCount++;
-        [[DBSession sharedSession] linkFromController:self];
+    if (error.code == 401) {
+        [self showLoginDialogOrCancel];
     } else {
         self.isLoading = NO;
     }
@@ -231,7 +245,7 @@
     // to authenticate
     [self.dropboxClient loadMetadata:self.rootPath];
     self.isLoading = YES;
-    
+    self.navigationItem.rightBarButtonItem.enabled = YES;
 }
 
 @end
