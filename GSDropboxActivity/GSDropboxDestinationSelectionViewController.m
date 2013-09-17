@@ -75,6 +75,8 @@
 {
     [super viewWillAppear:animated];
     
+    [self updateChooseButton];
+    
     if (self.rootPath == nil)
         self.rootPath = @"/";
     
@@ -85,6 +87,23 @@
     }
     self.navigationItem.prompt = NSLocalizedString(@"Choose a destination for uploads.", @"Prompt asking user to select a destination folder on Dropbox to which uploads will be saved.") ;
     self.isLoading = YES;
+    self.navigationItem.rightBarButtonItem.enabled = YES;
+}
+
+- (void) updateChooseButton {
+    NSArray* toolbarButtons = self.toolbarItems;
+    if(toolbarButtons.count < 2) {
+        //Not found
+        return;
+    }
+    UIBarButtonItem *item = toolbarButtons[1];
+    BOOL hasValidData = [self hasValidData];
+    item.enabled = hasValidData;
+}
+
+- (BOOL) hasValidData {
+    BOOL valid = self.subdirectories != nil && self.isLoading == NO;
+    return valid;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -92,9 +111,22 @@
     [super viewDidAppear:animated];
     
     if (![[DBSession sharedSession] isLinked]) {
-        [[DBSession sharedSession] linkFromController:self];
+        [self showLoginDialogOrCancel];
     } else {
         [self.dropboxClient loadMetadata:self.rootPath];
+    }
+}
+
+- (void) showLoginDialogOrCancel {
+    if(self.dropboxConnectionRetryCount < kDropboxConnectionMaxRetries) {
+        self.dropboxConnectionRetryCount++;
+        //disable cancel button, as if the user pressed it while we're presenting
+        //the loging viewcontroller (async), UIKit crashes with multiple viewcontroller
+        //animations
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+        [[DBSession sharedSession] linkFromController:self];
+    } else {
+        [self.delegate dropboxDestinationSelectionViewControllerDidCancel:self];
     }
 }
 
@@ -125,9 +157,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (self.isLoading || self.subdirectories == nil || [self.subdirectories count] == 0) {
-        return 1;
-    }
+    if (![self hasValidData] || self.subdirectories.count < 1) return 1;
+
     return [self.subdirectories count];
     
 }
@@ -186,18 +217,19 @@
     }
     self.subdirectories = [array sortedArrayUsingSelector:@selector(compare:)];
     self.isLoading = NO;
+    [self updateChooseButton];
 }
 
 - (void)restClient:(DBRestClient *)client loadMetadataFailedWithError:(NSError *)error
 {
     // Error 401 gets returned if a token is invalid, e.g. if the user has deleted
     // the app from their list of authorized apps at dropbox.com
-    if (error.code == 401 && self.dropboxConnectionRetryCount < kDropboxConnectionMaxRetries) {
-        self.dropboxConnectionRetryCount++;
-        [[DBSession sharedSession] linkFromController:self];
+    if (error.code == 401) {
+        [self showLoginDialogOrCancel];
     } else {
         self.isLoading = NO;
     }
+    [self updateChooseButton];
 }
 
 - (void)setIsLoading:(BOOL)isLoading
@@ -231,7 +263,7 @@
     // to authenticate
     [self.dropboxClient loadMetadata:self.rootPath];
     self.isLoading = YES;
-    
+    self.navigationItem.rightBarButtonItem.enabled = YES;
 }
 
 @end
