@@ -7,7 +7,7 @@
 
 #import "GSDropboxUploader.h"
 #import "GSDropboxUploadJob.h"
-#import <DropboxSDK/DropboxSDK.h>
+#import "DropboxSDK.h"
 
 NSString *const GSDropboxUploaderDidStartUploadingFileNotification = @"GSDropboxUploaderDidStartUploadingFileNotification";
 NSString *const GSDropboxUploaderDidFinishUploadingFileNotification = @"GSDropboxUploaderDidFinishUploadingFileNotification";

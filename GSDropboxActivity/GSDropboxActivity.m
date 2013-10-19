@@ -8,7 +8,7 @@
 #import "GSDropboxActivity.h"
 #import "GSDropboxDestinationSelectionViewController.h"
 #import "GSDropboxUploader.h"
-#import <DropboxSDK/DropboxSDK.h>
+#import "DropboxSDK.h"
 
 @interface GSDropboxActivity() <GSDropboxDestinationSelectionViewControllerDelegate>
 

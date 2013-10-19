@@ -6,7 +6,7 @@
 //
 
 #import "GSDropboxDestinationSelectionViewController.h"
-#import <DropboxSDK/DropboxSDK.h>
+#import "DropboxSDK.h"
 
 #define kDropboxConnectionMaxRetries 2
 
