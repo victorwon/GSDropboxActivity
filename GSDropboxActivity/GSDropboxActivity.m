@@ -23,6 +23,16 @@
     return @"uk.co.goosoftware.DropboxActivity";
 }
 
+- (id) init
+{
+    self = [super init];
+    if (self) {
+        self.promptForDestinationFolder = YES;
+    }
+    return self;
+}
+
+
 - (NSString *)activityType {
     return [GSDropboxActivity activityTypeString];
 }
@@ -30,6 +40,7 @@
 - (NSString *)activityTitle {
     return @"Dropbox";
 }
+
 - (UIImage *)activityImage {
     if ([[[[UIDevice currentDevice] systemVersion] substringToIndex:1] integerValue] <= 6) {
         return [UIImage imageNamed:@"GSDropboxActivityIcon-iOS6"];
@@ -59,13 +70,31 @@
 }
 
 - (UIViewController *)activityViewController {
-    GSDropboxDestinationSelectionViewController *vc = [[GSDropboxDestinationSelectionViewController alloc] initWithStyle:UITableViewStylePlain];
-    vc.delegate = self;
-
-    UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:vc];
-    nc.modalPresentationStyle = UIModalPresentationFormSheet;
     
-    return nc;
+    if (self.promptForDestinationFolder == YES) {
+        
+        // TODO - need to use a differnet view controller and display a confirmation modal.
+        //        for now handle the same as self.promptForDestinationFolder == NO
+        // - Kim Le
+        //
+        GSDropboxDestinationSelectionViewController *vc = [[GSDropboxDestinationSelectionViewController alloc] initWithStyle:UITableViewStylePlain];
+        vc.delegate = self;
+        
+        UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:vc];
+        nc.modalPresentationStyle = UIModalPresentationFormSheet;
+        
+        return nc;
+        
+    } else {
+        
+        GSDropboxDestinationSelectionViewController *vc = [[GSDropboxDestinationSelectionViewController alloc] initWithStyle:UITableViewStylePlain];
+        vc.delegate = self;
+            
+        UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:vc];
+        nc.modalPresentationStyle = UIModalPresentationFormSheet;
+        
+        return nc;
+    }
 }
 
 #pragma mark - GSDropboxDestinationSelectionViewController delegate methods

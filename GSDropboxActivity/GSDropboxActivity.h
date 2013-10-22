@@ -11,4 +11,6 @@
 
 + (NSString*)activityTypeString;
 
+@property () BOOL promptForDestinationFolder;
+
 @end
