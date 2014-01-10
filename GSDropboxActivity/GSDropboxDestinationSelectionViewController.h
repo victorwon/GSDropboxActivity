@@ -11,6 +11,7 @@
 
 @interface GSDropboxDestinationSelectionViewController : UITableViewController
 
+@property (nonatomic) BOOL showOnlyDirectories;
 @property (nonatomic, strong) NSString *rootPath;
 @property (nonatomic, weak) id<GSDropboxDestinationSelectionViewControllerDelegate> delegate;
 

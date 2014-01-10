@@ -23,16 +23,6 @@
     return @"uk.co.goosoftware.DropboxActivity";
 }
 
-- (id) init
-{
-    self = [super init];
-    if (self) {
-        self.promptForDestinationFolder = YES;
-    }
-    return self;
-}
-
-
 - (NSString *)activityType {
     return [GSDropboxActivity activityTypeString];
 }
@@ -70,31 +60,14 @@
 }
 
 - (UIViewController *)activityViewController {
+    GSDropboxDestinationSelectionViewController *vc = [[GSDropboxDestinationSelectionViewController alloc] initWithStyle:UITableViewStylePlain];
+    vc.delegate = self;
+    vc.showOnlyDirectories = self.showOnlyDirectories;
+        
+    UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:vc];
+    nc.modalPresentationStyle = UIModalPresentationFormSheet;
     
-    if (self.promptForDestinationFolder == YES) {
-        
-        // TODO - need to use a differnet view controller and display a confirmation modal.
-        //        for now handle the same as self.promptForDestinationFolder == NO
-        // - Kim Le
-        //
-        GSDropboxDestinationSelectionViewController *vc = [[GSDropboxDestinationSelectionViewController alloc] initWithStyle:UITableViewStylePlain];
-        vc.delegate = self;
-        
-        UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:vc];
-        nc.modalPresentationStyle = UIModalPresentationFormSheet;
-        
-        return nc;
-        
-    } else {
-        
-        GSDropboxDestinationSelectionViewController *vc = [[GSDropboxDestinationSelectionViewController alloc] initWithStyle:UITableViewStylePlain];
-        vc.delegate = self;
-            
-        UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:vc];
-        nc.modalPresentationStyle = UIModalPresentationFormSheet;
-        
-        return nc;
-    }
+    return nc;
 }
 
 #pragma mark - GSDropboxDestinationSelectionViewController delegate methods

@@ -8,7 +8,7 @@
 #import "GSDropboxDestinationSelectionViewController.h"
 #import "DropboxSDK.h"
 
-#define kDropboxConnectionMaxRetries 2
+#define kDropboxConnectionMaxRetries 1
 
 @interface GSDropboxDestinationSelectionViewController () <DBRestClientDelegate>
 @property (nonatomic) BOOL isLoading;
@@ -75,6 +75,15 @@
 {
     [super viewWillAppear:animated];
     
+    if (![[DBSession sharedSession] isLinked]) {
+        self.navigationItem.leftBarButtonItem = nil;
+    } else {
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Logout", @"Sharing services logout button")
+                                                                                 style:UIBarButtonItemStylePlain
+                                                                                target:self
+                                                                                action:@selector(handleLogout)];
+    }
+
     [self updateChooseButton];
     
     if (self.rootPath == nil)
@@ -179,8 +188,20 @@
     } else if ([self.subdirectories count] == 0) {
         cell.textLabel.text = NSLocalizedString(@"Contains no folders", @"Status message when the current folder contains no sub-folders");
     } else {
-        cell.textLabel.text = [[self.subdirectories objectAtIndex:indexPath.row] lastPathComponent];
-        cell.imageView.image = [UIImage imageNamed:@"folder-icon.png"];
+
+        DBMetadata* metadata = [self.subdirectories objectAtIndex:indexPath.row];
+        
+        cell.textLabel.text = [metadata.filename lastPathComponent];
+        
+        if (metadata.isDirectory) {
+            cell.imageView.image = [UIImage imageNamed:@"OtherFolder"];
+            cell.selectionStyle =  UITableViewCellSelectionStyleDefault;
+            cell.textLabel.textColor = [UIColor blackColor];
+        } else {
+            cell.imageView.image = [UIImage imageNamed:@"GenericFile"];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            cell.textLabel.textColor = [UIColor grayColor];
+        }
     }
     
     return cell;
@@ -190,15 +211,20 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 56.0;
+    return 45.0;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if ([cell selectionStyle] == UITableViewCellSelectionStyleNone) {
+        return;
+    }
+
     if ([self.subdirectories count] > indexPath.row) {
         GSDropboxDestinationSelectionViewController *vc = [[GSDropboxDestinationSelectionViewController alloc] init];
         vc.delegate = self.delegate;
-        vc.rootPath = [self.rootPath stringByAppendingPathComponent:[self.subdirectories objectAtIndex:indexPath.row]];
+        vc.rootPath = [self.rootPath stringByAppendingPathComponent:((DBMetadata*)[self.subdirectories objectAtIndex:indexPath.row]).filename];
         [self.navigationController pushViewController:vc animated:YES];
     } else {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -207,15 +233,24 @@
 
 #pragma mark - Dropbox client delegate methods
 
+NSInteger dbMetadataSort(DBMetadata* d1, DBMetadata* d2, void *context)
+{
+    return [d1.filename compare:d2.filename];
+}
+
 - (void)restClient:(DBRestClient *)client loadedMetadata:(DBMetadata *)metadata
 {
     NSMutableArray *array = [NSMutableArray array];
     for (DBMetadata *file in metadata.contents) {
-        if (file.isDirectory && [file.filename length] > 0 && [file.filename characterAtIndex:0] != '.') {
-            [array addObject:file.filename];
+        if ([file.filename length] > 0 && [file.filename characterAtIndex:0] != '.') {
+            if (self.showOnlyDirectories == NO || (self.showOnlyDirectories == YES && file.isDirectory)) {
+                [array addObject:file];
+            }
         }
     }
-    self.subdirectories = [array sortedArrayUsingSelector:@selector(compare:)];
+
+    self.subdirectories = [array sortedArrayUsingFunction:dbMetadataSort context:NULL];
+    
     self.isLoading = NO;
     [self updateChooseButton];
 }
@@ -238,6 +273,14 @@
         _isLoading = isLoading;
         [self.tableView reloadData];
     }
+}
+
+- (void)handleLogout
+{
+    [[DBSession sharedSession] unlinkAll];
+    
+    self.dropboxConnectionRetryCount = 0;
+    [self showLoginDialogOrCancel];
 }
 
 - (void)handleCancel

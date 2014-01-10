@@ -11,6 +11,6 @@
 
 + (NSString*)activityTypeString;
 
-@property () BOOL promptForDestinationFolder;
+@property () BOOL showOnlyDirectories;
 
 @end
