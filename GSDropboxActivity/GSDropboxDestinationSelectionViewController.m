@@ -75,13 +75,11 @@
 {
     [super viewWillAppear:animated];
     
-    if (![[DBSession sharedSession] isLinked]) {
-        self.navigationItem.leftBarButtonItem = nil;
-    } else {
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Logout", @"Sharing services logout button")
+    if (self.navigationController.viewControllers.count == 1 && [[DBSession sharedSession] isLinked]) {
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Sign out", @"Sharing services logout button")
                                                                                  style:UIBarButtonItemStylePlain
                                                                                 target:self
-                                                                                action:@selector(handleLogout)];
+                                                                                action:@selector(handleLogoutConfirm)];
     }
 
     [self updateChooseButton];
@@ -235,6 +233,12 @@
 
 NSInteger dbMetadataSort(DBMetadata* d1, DBMetadata* d2, void *context)
 {
+    // list directories first
+    if (d1.isDirectory && !d2.isDirectory) {
+        return -1;
+    } else if (!d1.isDirectory && d2.isDirectory) {
+        return 1;
+    }
     return [d1.filename compare:d2.filename];
 }
 
@@ -275,6 +279,16 @@ NSInteger dbMetadataSort(DBMetadata* d1, DBMetadata* d2, void *context)
     }
 }
 
+- (void)handleLogoutConfirm
+{
+    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Sign out of Dropbox?"
+                                                    message:nil
+                                                   delegate:self
+                                          cancelButtonTitle:@"Cancel"
+                                          otherButtonTitles:@"Sign out", nil];
+    [alert show];
+}
+
 - (void)handleLogout
 {
     [[DBSession sharedSession] unlinkAll];
@@ -307,6 +321,15 @@ NSInteger dbMetadataSort(DBMetadata* d1, DBMetadata* d2, void *context)
     [self.dropboxClient loadMetadata:self.rootPath];
     self.isLoading = YES;
     self.navigationItem.rightBarButtonItem.enabled = YES;
+}
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1) {
+        [self handleLogout];
+    }
 }
 
 @end
