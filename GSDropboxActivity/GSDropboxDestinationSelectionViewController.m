@@ -184,7 +184,11 @@
     } else if (self.subdirectories == nil) {
         cell.textLabel.text = NSLocalizedString(@"Error loading folder contents", @"Error message if the app couldn't load a list of a folder's contents from Dropbox");
     } else if ([self.subdirectories count] == 0) {
-        cell.textLabel.text = NSLocalizedString(@"Contains no folders", @"Status message when the current folder contains no sub-folders");
+        if (self.showOnlyDirectories == YES) {
+            cell.textLabel.text = NSLocalizedString(@"Contains no folders", @"Status message when the current folder contains no sub-folders");
+        } else {
+            cell.textLabel.text = NSLocalizedString(@"Contains no folders or files", @"Status message when the current folder contains no sub-folders");
+        }
     } else {
 
         DBMetadata* metadata = [self.subdirectories objectAtIndex:indexPath.row];
@@ -265,6 +269,9 @@ NSInteger dbMetadataSort(DBMetadata* d1, DBMetadata* d2, void *context)
     // the app from their list of authorized apps at dropbox.com
     if (error.code == 401) {
         [self showLoginDialogOrCancel];
+    } else if (error.code == 403) {
+        // user canceled dropbox.com authentication
+        [self handleCancel];
     } else {
         self.isLoading = NO;
     }
@@ -318,9 +325,13 @@ NSInteger dbMetadataSort(DBMetadata* d1, DBMetadata* d2, void *context)
 {
     // Happens after user has been bounced out to Dropbox.app or Safari.app
     // to authenticate
-    [self.dropboxClient loadMetadata:self.rootPath];
-    self.isLoading = YES;
-    self.navigationItem.rightBarButtonItem.enabled = YES;
+    if ([[DBSession sharedSession] isLinked] == YES) {
+        [self.dropboxClient loadMetadata:self.rootPath];
+        self.isLoading = YES;
+        self.navigationItem.rightBarButtonItem.enabled = YES;
+    } else {
+        [self handleCancel];
+    }
 }
 
 #pragma mark - UIAlertViewDelegate
