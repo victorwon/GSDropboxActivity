@@ -62,6 +62,24 @@
                                              selector:@selector(handleApplicationBecameActive:)
                                                  name:UIApplicationDidBecomeActiveNotification
                                                object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleApplicationBecameActive:)
+                                                 name:@"DropBoxCallback"
+                                               object:nil]; // setup handleOpenURL in app delegate to post this notification
+/*
+ * Sample handleOpenURL code
+    - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+        if ([[DBSession sharedSession] handleOpenURL:url]) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"DropBoxCallback" object:nil];
+ 
+            return YES;
+        }
+        
+        // Do something with the url here for other pattern, if any
+        return NO;
+    }
+*/
+    
 }
 
 - (void)viewDidUnload
@@ -133,6 +151,7 @@
         self.navigationItem.rightBarButtonItem.enabled = NO;
         [[DBSession sharedSession] linkFromController:self];
     } else {
+        self.navigationItem.rightBarButtonItem.enabled = YES;
         [self.delegate dropboxDestinationSelectionViewControllerDidCancel:self];
     }
 }
@@ -261,6 +280,9 @@ NSInteger dbMetadataSort(DBMetadata* d1, DBMetadata* d2, void *context)
     
     self.isLoading = NO;
     [self updateChooseButton];
+    
+    self.navigationItem.rightBarButtonItem.enabled = YES;
+
 }
 
 - (void)restClient:(DBRestClient *)client loadMetadataFailedWithError:(NSError *)error
@@ -276,6 +298,9 @@ NSInteger dbMetadataSort(DBMetadata* d1, DBMetadata* d2, void *context)
         self.isLoading = NO;
     }
     [self updateChooseButton];
+    
+    self.navigationItem.rightBarButtonItem.enabled = YES;
+
 }
 
 - (void)setIsLoading:(BOOL)isLoading
@@ -302,6 +327,7 @@ NSInteger dbMetadataSort(DBMetadata* d1, DBMetadata* d2, void *context)
     
     self.dropboxConnectionRetryCount = 0;
     [self showLoginDialogOrCancel];
+    
 }
 
 - (void)handleCancel
@@ -330,7 +356,7 @@ NSInteger dbMetadataSort(DBMetadata* d1, DBMetadata* d2, void *context)
         self.isLoading = YES;
         self.navigationItem.rightBarButtonItem.enabled = YES;
     } else {
-        [self handleCancel];
+        [self performSelector:@selector(handleCancel) withObject:nil afterDelay:1.0f]; // delay at least 1s to avoid conflict when user taps cancel button during DB login.
     }
 }
 
